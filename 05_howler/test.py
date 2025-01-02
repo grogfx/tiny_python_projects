@@ -90,3 +90,74 @@ def test_file():
         finally:
             if os.path.isfile(out_file):
                 os.remove(out_file)
+
+
+# --------------------------------------------------
+def test_text_stdout_lower():
+    """Test STDIN/STDOUT lower"""
+
+    out = getoutput(f'{prg} "FOO BAR BAZ" -e')
+    assert out.strip() == 'foo bar baz'
+
+
+# --------------------------------------------------
+def test_text_outfile_lower():
+    """Test STDIN/outfile lower"""
+
+    out_file = random_string()
+    if os.path.isfile(out_file):
+        os.remove(out_file)
+
+    try:
+        out = getoutput(f'{prg} {out_flag()} {out_file} "FOO BAR BAZ" --ee')
+        assert out.strip() == ''
+        assert os.path.isfile(out_file)
+        text = open(out_file).read().rstrip()
+        assert text == 'foo bar baz'
+    finally:
+        if os.path.isfile(out_file):
+            os.remove(out_file)
+
+
+# --------------------------------------------------
+def test_file_lower():
+    """Test file in/out"""
+
+    for expected_file in os.listdir('test-outs-lower'):
+        try:
+            out_file = random_string()
+            if os.path.isfile(out_file):
+                os.remove(out_file)
+
+            basename = os.path.basename(expected_file)
+            in_file = os.path.join('../inputs', basename)
+            out = getoutput(f'{prg} {out_flag()} {out_file} {in_file}')
+            assert out.strip() == ''
+            produced = open(out_file).read().rstrip()
+            expected = open(os.path.join('test-outs',
+                                         expected_file)).read().strip()
+            assert expected == produced
+        finally:
+            if os.path.isfile(out_file):
+                os.remove(out_file)
+
+
+# --------------------------------------------------
+def test_multiple_files():
+    """Test file in/out"""
+
+    getoutput(
+        f'{prg} test-outs-lower/preamble.txt test-outs-lower/sonnet-29.txt test-outs-lower/the-bustle.txt'
+    )
+
+    for expected_file in os.listdir('test-outs-lower'):
+        produced = open(os.path.join('output', expected_file)).read().strip()
+        expected = open(os.path.join('test-outs',
+                                     expected_file)).read().strip()
+        assert expected == produced
+
+    for root, dirs, files in os.walk('output', topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
