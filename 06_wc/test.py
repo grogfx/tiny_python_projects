@@ -105,3 +105,91 @@ def test_stdin():
     rv, out = getstatusoutput(f'{prg} < {fox}')
     assert rv == 0
     assert out.rstrip() == '       1       9      45 <stdin>'
+
+
+# --------------------------------------------------
+def test_char():
+    """Test char colum"""
+
+    rv, out = getstatusoutput(f'{prg} {fox} {sonnet} -c')
+    expected = ('      45 ../inputs/fox.txt\n'
+                '     661 ../inputs/sonnet-29.txt\n'
+                '     706 total')
+    assert rv == 0
+    assert out.rstrip() == expected
+
+
+# --------------------------------------------------
+def test_line():
+    """Test line colum"""
+
+    rv, out = getstatusoutput(f'{prg} {fox} {sonnet} -l')
+    expected = ('       1 ../inputs/fox.txt\n'
+                '      17 ../inputs/sonnet-29.txt\n'
+                '      18 total')
+    assert rv == 0
+    assert out.rstrip() == expected
+
+
+# --------------------------------------------------
+def test_word():
+    """Test line colum"""
+
+    rv, out = getstatusoutput(f'{prg} {fox} {sonnet} -w')
+    expected = ('       9 ../inputs/fox.txt\n'
+                '     118 ../inputs/sonnet-29.txt\n'
+                '     127 total')
+    assert rv == 0
+    assert out.rstrip() == expected
+
+
+# --------------------------------------------------
+def test_line_char():
+    """Test char colum"""
+
+    rv, out = getstatusoutput(f'{prg} {fox} {sonnet} -cl')
+    expected = ('       1      45 ../inputs/fox.txt\n'
+                '      17     661 ../inputs/sonnet-29.txt\n'
+                '      18     706 total')
+    assert rv == 0
+    assert out.rstrip() == expected
+
+
+# --------------------------------------------------
+def test_cat():
+
+    rv, out = getstatusoutput(f'cat {sonnet}')
+    rv0, out0 = getstatusoutput(f'./cat.py {sonnet}')
+    assert rv == 0
+    assert rv0 == 0
+    assert out.rstrip() == out0.rstrip()
+
+
+# --------------------------------------------------
+def test_tac():
+
+    rv, out = getstatusoutput(f'tac {sonnet}')
+    rv0, out0 = getstatusoutput(f'./tac.py {sonnet}')
+    assert rv == 0
+    assert rv0 == 0
+    assert out.rstrip() == out0.rstrip()
+
+
+# --------------------------------------------------
+def test_head():
+
+    rv, out = getstatusoutput(f'head {sonnet} -n 2')
+    rv0, out0 = getstatusoutput(f'./head.py {sonnet} -n 2')
+    assert rv == 0
+    assert rv0 == 0
+    assert out.rstrip() == out0.rstrip()
+
+
+# --------------------------------------------------
+def test_tail():
+
+    rv, out = getstatusoutput(f'tail {sonnet} -n 2')
+    rv0, out0 = getstatusoutput(f'./tail.py {sonnet} -n 2')
+    assert rv == 0
+    assert rv0 == 0
+    assert out.rstrip() == out0.rstrip()
