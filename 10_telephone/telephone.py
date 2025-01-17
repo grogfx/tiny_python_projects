@@ -62,18 +62,12 @@ def main():
     samples = random.sample(range(len_line),
                             k=round(args.mutations * len_line))
 
-    def make_str(new_line, n):
-        s_b = new_line[:n]
-        s_a = new_line[n + 1:]
-        s_c = random.choice(letter_bag.replace(new_line[n], ''))
-        return s_b + s_c + s_a
-
-    new_line = line
+    new_line = list(line)
     for n in samples:
-        new_line = make_str(new_line, n)
+        new_line[n] = random.choice(letter_bag.replace(new_line[n], ''))
 
-    print(f'You said: "{line.rstrip()}"')
-    print(f'I heard : "{new_line.rstrip()}"')
+    print('You said: "{}"\nI heard : "{}"\n'.format(
+        line.rstrip(), ''.join(new_line).rstrip()))
 
 
 # --------------------------------------------------
